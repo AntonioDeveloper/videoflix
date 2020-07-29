@@ -73,3 +73,10 @@ body {
     text-align: center;
   }
 }
+
+#root {
+min-height: 100vh;
+display:flex;
+flex-direction: column;
+/*padding-top: calc(100vh - var(--bodyPaddingTop)); */
+}
