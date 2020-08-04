@@ -1,16 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
-let FormField = function ({ rows, cols, label, name, type, value, onChange }) {
+let FormField = function ({ label, name, type, value, onChange }) {
+  const fieldId = `id_${name}`;
+  const isTextArea = type === 'textarea';
+  const tag = isTextArea ? 'textarea' : 'input';
+
   return (
     <div>
       <label>
         {label}: &nbsp;
 
         <input
+          as={tag}
+          id={fieldId}
           type={type}
-          rows={rows}
-          cols={cols}
           value={value}
           name={name}
           onChange={onChange}
@@ -20,7 +25,19 @@ let FormField = function ({ rows, cols, label, name, type, value, onChange }) {
   )
 }
 
+FormField.defaultProps = {
+  type: 'text',
+  value: '',
+  onChange: () => { },
+};
 
+FormField.propTypes = {
+  label: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+}
 
 FormField = styled.input`
 color: #141414;
@@ -28,7 +45,7 @@ font-size: 1.2rem;
 display: flex;
 flex-direction: column;
 width: 50%;
-height: 58px;
+min-height: 58px;
 border-radius: 5px;
 transition: border-color 0.3s ease 0s;
 background: #ccc;
@@ -40,5 +57,6 @@ margin: 15px auto;
 border-bottom-color: #2a7ae4;
 }
 `;
+
 
 export default FormField;

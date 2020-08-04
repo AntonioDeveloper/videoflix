@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageDefault from '../../../components/PageDefault';
 import FormField from '../../../components/FormField';
@@ -28,6 +28,24 @@ function CadastroCategoria() {
     );
   }
 
+  //useEffect: determina um efeito como consequência de um gatilho 
+  //(definido por um array). Caso haja array vazio, esse efeito ocorre em toda e qualquer interação.
+  //Se não houver array algum, haverá o loop infinito...
+  useEffect(() => {
+    console.log("oi oi oi!!!");
+    const URL_TOP = 'http://localhost:8080/categorias';
+
+    fetch(URL_TOP)
+      .then(async (res) => {
+        const resposta = await res.json();
+        console.log(resposta);
+        setCategorias([
+          ...resposta,
+        ]);
+      });
+  }, []);
+
+
   return (
     <PageDefault>
       <h1>Cadastro de Categoria: {values.nome}</h1>
@@ -53,11 +71,9 @@ function CadastroCategoria() {
 
         <FormField
           label="Descrição:"
-          type="textarea"
+          as="textarea"
           name="descricao"
           value={values.descricao}
-          cols={50}
-          rows={4}
           placeholder="Descrição"
           onChange={handleChange}
         />
@@ -98,6 +114,11 @@ function CadastroCategoria() {
         </button>
       </form>
 
+      {categorias.length === 0 && (
+        < div >
+          Carregando...
+        </div>
+      )}
 
       <ul>
         {categorias.map((categoria, indice) => {
