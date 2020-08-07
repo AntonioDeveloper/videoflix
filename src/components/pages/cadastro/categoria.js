@@ -2,38 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageDefault from '../../../components/PageDefault';
 import FormField from '../../../components/FormField';
+import useForm from '../../../hooks/useForm';
+import Button from '../../../components/Button/button';
 
 function CadastroCategoria() {
   const valoresIniciais = {
-    nome: '',
+    titulo: '',
     descricao: '',
     cor: '',
   }
+
+  const { handleChange, values, clearForm } = useForm(valoresIniciais);
+
   const [categorias, setCategorias] = useState([]);
-  const [values, setValues] = useState('');
 
 
-  function setValue(chave, valor) {
-    // chave: nome, descricao, bla, bli
-    setValues({
-      ...values,
-      [chave]: valor, // nome: 'valor'
-    })
-  }
-
-  function handleChange(infosDoEvento) {
-    setValue(
-      infosDoEvento.target.getAttribute('name'),
-      infosDoEvento.target.value
-    );
-  }
 
   //useEffect: determina um efeito como consequência de um gatilho 
   //(definido por um array). Caso haja array vazio, esse efeito ocorre em toda e qualquer interação.
   //Se não houver array algum, haverá o loop infinito...
   useEffect(() => {
-    console.log("oi oi oi!!!");
-    const URL_TOP = 'http://localhost:8080/categorias';
+    // Criação da variável de ambiente
+    const URL_TOP = window.location.hostname.includes('localhost') ?
+      'http://localhost:8080/categorias' :
+      'https://videoflix-backend.herokuapp.com/categorias';
 
     fetch(URL_TOP)
       .then(async (res) => {
@@ -57,13 +49,13 @@ function CadastroCategoria() {
           values
         ]);
 
-        setValues(valoresIniciais)
+        clearForm()
       }}>
 
         <FormField
           label="Nome da Categoria"
           type="text"
-          name="nome"
+          name="titulo"
           placeholder="Nome da categoria"
           value={values.nome}
           onChange={handleChange}
@@ -109,9 +101,9 @@ function CadastroCategoria() {
           </label>
         </div> */}
 
-        <button style={{ marginTop: "10px" }}>
+        <Button style={{ marginTop: "10px" }}>
           Cadastrar
-        </button>
+        </Button>
       </form>
 
       {categorias.length === 0 && (
@@ -124,7 +116,7 @@ function CadastroCategoria() {
         {categorias.map((categoria, indice) => {
           return (
             <li key={`${categoria}${indice}`} style={{ display: "flex" }} >
-              {categoria.nome}, {categoria.descricao},  <span style={{ background: categoria.cor, width: "100px", height: "20px", marginLeft: "5px" }}></span>
+              {categoria.titulo}, {categoria.descricao},  <span style={{ background: categoria.cor, width: "100px", height: "20px", marginLeft: "5px" }}></span>
             </li>
 
           )
